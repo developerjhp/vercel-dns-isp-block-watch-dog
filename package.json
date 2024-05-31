@@ -1,0 +1,13 @@
+{
+  "name": "vercel-dns-isp-block-watch-dog",
+  "version": "1.0.0",
+  "description": "A tool to monitor Vercel DNS responses and alert via Slack for ISP blocking",
+  "main": "watch_dog.js",
+  "scripts": {
+    "start": "node watch_dog.js"
+  },
+  "dependencies": {
+    "@slack/web-api": "^6.0.0",
+    "dns": "0.2.2"
+  }
+}
