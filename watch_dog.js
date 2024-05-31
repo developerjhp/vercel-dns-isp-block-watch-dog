@@ -19,22 +19,33 @@ const dnsServers = {
 // vercel serverless를 사용하는 경우 serverless ip도 꼭 같이 확인해주세요.
 const domains = process.env.CHECK_DOMAINS.split(',');
 
-async function sendSlackMessage(blocks) {
+async function sendSlackMessage(message) {
   try {
     await web.chat.postMessage({
       channel: slackChannel,
       text: `<@${slackUserId}>`,
-      blocks: blocks,
+      blocks: message,
     });
   } catch (error) {
     console.error('Error sending message to Slack:', error);
   }
 }
 
+async function resolveDomain(resolver, domain) {
+  return new Promise((resolve, reject) => {
+    resolver.resolve4(domain, (err, addresses) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(addresses);
+      }
+    });
+  });
+}
+
 async function checkDNS() {
   let allSuccessful = true;
   const errorMessages = [];
-  const successMessages = [];
 
   for (const domain of domains) {
     for (const isp of Object.keys(dnsServers)) {
@@ -43,19 +54,10 @@ async function checkDNS() {
         resolver.setServers([server]);
 
         try {
-          const addresses = await new Promise((resolve, reject) => {
-            resolver.resolve(domain, (err, addresses) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(addresses);
-              }
-            });
-          });
-
-          const successMessage = `:white_check_mark: DNS lookup for *${domain}* using *${isp}* DNS server *${server}* succeeded: ${addresses}`;
-          console.log(successMessage);
-          successMessages.push(successMessage);
+          const addresses = await resolveDomain(resolver, domain);
+          console.log(
+            `:white_check_mark: DNS lookup for *${domain}* using *${isp}* DNS server *${server}* succeeded: ${addresses}`
+          );
         } catch (err) {
           allSuccessful = false;
           const errorMessage = `:x: DNS lookup failed for *${domain}* using *${isp}* DNS server *${server}*: ${err.message}`;
@@ -73,17 +75,8 @@ async function checkDNS() {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: ':tada: No Issue :tada:\nAll DNS lookups succeeded without any issues.',
+        text: ':white_check_mark: All DNS lookups succeeded without any issues.',
       },
-    });
-    successMessages.forEach(message => {
-      blocks.push({
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: message,
-        },
-      });
     });
   } else {
     blocks.push({
