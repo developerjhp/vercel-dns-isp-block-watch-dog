@@ -12,7 +12,6 @@ const web = new WebClient(slackToken);
 const dnsServers = {
   KT: ['168.126.63.1', '168.126.63.2'],
   LGUplus: ['164.124.101.2', '203.248.252.2'],
-  LGHelloVision: ['180.182.54.2'],
   SKT: ['210.220.163.82', '219.250.36.130'],
 };
 

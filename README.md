@@ -5,7 +5,7 @@
 한국의 ISP에서 Vercel DNS를 차단하는 이슈가 지속적으로 발생하고 있습니다.
 Vercel을 통해 배포된 도메인이 ISP에 의해 차단될 경우, 알림을 받기 위한 오픈소스 프로젝트입니다.
 
-Vercel DNS ISP Block Watch Dog는 KT, SKT, LGU+, LG HelloVision DNS 서버를 통해 Vercel로 배포된 도메인의 접근 가능 여부를 모니터링하고, 문제가 발생하면 Slack으로 알림을 보내는 도구입니다.
+Vercel DNS ISP Block Watch Dog는 KT, SKT, LGU+ DNS 서버를 통해 Vercel로 배포된 도메인의 접근 가능 여부를 모니터링하고, 문제가 발생하면 Slack으로 알림을 보내는 도구입니다.
 
 ## 기능
 
