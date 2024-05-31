@@ -15,7 +15,6 @@ const dnsServers = {
   SKT: ['210.220.163.82', '219.250.36.130'],
 };
 
-// vercel serverless를 사용하는 경우 serverless ip도 꼭 같이 확인해주세요.
 const domains = process.env.CHECK_DOMAINS.split(',');
 
 async function sendSlackMessage(message) {
