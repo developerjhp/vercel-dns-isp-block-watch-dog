@@ -1,7 +1,6 @@
 const dns = require('dns');
 const { WebClient } = require('@slack/web-api');
 
-// Slack 설정
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slackChannel = process.env.SLACK_CHANNEL_ID;
 const slackUserId = process.env.SLACK_USER_ID;
@@ -9,11 +8,11 @@ const web = new WebClient(slackToken);
 
 const dnsServers = {
   KT: ['168.126.63.1', '168.126.63.2'],
-  LGUplus: ['164.124.101.2', '203.248.252.2'],
-  SKT: ['218.146.128.1', '218.146.129.1'],
+  LGUplus: ['164.124.101.2', '203.248.252.2', '1.214.68.2', '61.41.153.2'],
+  LGHelloVision: ['180.182.54.1', '180.182.54.2'],
+  SKT: ['210.220.163.82', '219.250.36.130'],
 };
 
-// 여러 도메인 입력
 const domains = process.env.CHECK_DOMAINS.split(',');
 
 async function sendSlackMessage(blocks) {
@@ -70,7 +69,7 @@ async function checkDNS() {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: ':tada: *모두 성공!* :tada:\nAll DNS lookups succeeded without any issues.',
+        text: ':tada: No Issue :tada:\nAll DNS lookups succeeded without any issues.',
       },
     });
     successMessages.forEach(message => {
