@@ -6,13 +6,17 @@ const slackChannel = process.env.SLACK_CHANNEL_ID;
 const slackUserId = process.env.SLACK_USER_ID;
 const web = new WebClient(slackToken);
 
+// DNS 서버 설정
+// DNS를 추가할 때, 해당 DNS가 정상 작동하는지 확인해주세요.
+// 예를 들어, nslookup naver.com 추가할_DNS 를 사용하여 DNS가 정상적으로 응답하는지 테스트합니다.
 const dnsServers = {
   KT: ['168.126.63.1', '168.126.63.2'],
-  LGUplus: ['164.124.101.2', '203.248.252.2', '1.214.68.2', '61.41.153.2'],
-  LGHelloVision: ['180.182.54.1', '180.182.54.2'],
+  LGUplus: ['164.124.101.2', '203.248.252.2'],
+  LGHelloVision: ['180.182.54.2'],
   SKT: ['210.220.163.82', '219.250.36.130'],
 };
 
+// vercel serverless를 사용하는 경우 serverless ip도 꼭 같이 확인해주세요.
 const domains = process.env.CHECK_DOMAINS.split(',');
 
 async function sendSlackMessage(blocks) {
