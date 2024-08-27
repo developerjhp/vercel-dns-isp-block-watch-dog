@@ -56,9 +56,9 @@ npm  install
 SLACK_BOT_TOKEN=your-slack-bot-token
 SLACK_CHANNEL_ID_SUCCESS=your-slack-channel-id
 SLACK_CHANNEL_ID_FAILURE=your-slack-channel-id
-SLACK_USER_ID=your-slack-user-id
-SLACK_USER_GROUP_ID=your-slack-user-group-id
-CHECK_DOMAINS=사용하시는_도메인_주소.com,사용하시는_도메인_주소_두번째.com,사용하시는_도메인_주소_세번째.com
+SLACK_USER_IDS=your-slack-user-id-1,your-slack-user-id-2,...
+SLACK_USER_GROUP_IDS=your-slack-user-group-id-1,your-slack-user-group-id-3,...
+CHECK_DOMAINS=사용하시는_도메인_주소.com,사용하시는_도메인_주소_두번째.com,사용하시는_도메인_주소_세번째.com,...
 ```
 **Github Action** 으로 실행하시는 경우
 GitHub Secrets 에서 env를 설정해주세요 .

@@ -5,8 +5,12 @@ const domains = process.env.CHECK_DOMAINS.split(",");
 const slackToken = process.env.SLACK_BOT_TOKEN;
 const slackChannelSuccess = process.env.SLACK_CHANNEL_ID_SUCCESS; // 성공 시 보낼 채널 ID
 const slackChannelFailure = process.env.SLACK_CHANNEL_ID_FAILURE; // 실패 시 보낼 채널 ID
-const slackUserId = process.env.SLACK_USER_ID; // 특정 사용자 ID (필요시 사용)
-const slackGroupId = process.env.SLACK_USER_GROUP_ID; // 그룹 ID
+const slackUserIds = process.env.SLACK_USER_IDS
+  ? process.env.SLACK_USER_IDS.split(",")
+  : []; // 여러 사용자 ID
+const slackGroupIds = process.env.SLACK_USER_GROUP_IDS
+  ? process.env.SLACK_USER_GROUP_IDS.split(",")
+  : []; // 여러 그룹 ID
 
 const web = new WebClient(slackToken);
 
@@ -21,7 +25,7 @@ async function sendSlackMessage(channel, message) {
   try {
     await web.chat.postMessage({
       channel: channel,
-      text: `<@${slackUserId}>`,
+      text: message.map((block) => block.text.text).join("\n"),
       blocks: message,
     });
   } catch (error) {
@@ -67,9 +71,12 @@ async function checkDNS() {
   }
 
   const blocks = [];
-  const mentionTag = slackGroupId
-    ? `<!subteam^${slackGroupId}>`
-    : `<@${slackUserId}>`;
+
+  const groupMentions = slackGroupIds
+    .map((groupId) => `<!subteam^${groupId}>`)
+    .join(" ");
+  const userMentions = slackUserIds.map((userId) => `<@${userId}>`).join(" ");
+  const mentionTags = `${groupMentions} ${userMentions}`.trim();
 
   if (allSuccessful) {
     blocks.push({
@@ -85,7 +92,7 @@ async function checkDNS() {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `:warning: *DNS Lookup Failures Detected!* :warning:\n${mentionTag} Some DNS lookups failed. See the details below:`,
+        text: `:warning: *DNS Lookup Failures Detected!* :warning:\n${mentionTags} Some DNS lookups failed. See the details below:`,
       },
     });
     errorMessages.forEach((errorMessage) => {

@@ -39,7 +39,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           SLACK_CHANNEL_ID_SUCCESS: ${{ secrets.SLACK_CHANNEL_ID_SUCCESS }}
           SLACK_CHANNEL_ID_FAILURE: ${{ secrets.SLACK_CHANNEL_ID_FAILURE }}
-          SLACK_USER_ID: ${{ secrets.SLACK_USER_ID }}
-          SLACK_USER_GROUP_ID: ${{ secrets.SLACK_USER_GROUP_ID }}
+          SLACK_USER_IDS: ${{ secrets.SLACK_USER_IDS }}
+          SLACK_USER_GROUP_IDS: ${{ secrets.SLACK_USER_GROUP_IDS }}
           CHECK_DOMAINS: ${{ secrets.CHECK_DOMAINS }}
         run: node watch_dog.js
