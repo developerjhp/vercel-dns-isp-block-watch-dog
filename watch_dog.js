@@ -71,7 +71,7 @@ async function checkDNS() {
     ? `<!subteam^${slackGroupId}>`
     : `<@${slackUserId}>`;
 
-  if (!allSuccessful) {
+  if (allSuccessful) {
     blocks.push({
       type: "section",
       text: {
