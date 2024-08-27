@@ -37,7 +37,9 @@ jobs:
       - name: Run DNS check
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+          SLACK_CHANNEL_ID_SUCCESS: ${{ secrets.SLACK_CHANNEL_ID_SUCCESS }}
+          SLACK_CHANNEL_ID_FAILURE: ${{ secrets.SLACK_CHANNEL_ID_FAILURE }}
           SLACK_USER_ID: ${{ secrets.SLACK_USER_ID }}
+          SLACK_USER_GROUP_ID: ${{ secrets.SLACK_USER_GROUP_ID }}
           CHECK_DOMAINS: ${{ secrets.CHECK_DOMAINS }}
         run: node watch_dog.js

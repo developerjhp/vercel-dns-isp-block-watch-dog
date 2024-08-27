@@ -1,31 +1,31 @@
-const dns = require('dns');
-const { WebClient } = require('@slack/web-api');
+const dns = require("dns");
+const { WebClient } = require("@slack/web-api");
 
+const domains = process.env.CHECK_DOMAINS.split(",");
 const slackToken = process.env.SLACK_BOT_TOKEN;
-const slackChannel = process.env.SLACK_CHANNEL_ID;
-const slackUserId = process.env.SLACK_USER_ID;
+const slackChannelSuccess = process.env.SLACK_CHANNEL_ID_SUCCESS; // 성공 시 보낼 채널 ID
+const slackChannelFailure = process.env.SLACK_CHANNEL_ID_FAILURE; // 실패 시 보낼 채널 ID
+const slackUserId = process.env.SLACK_USER_ID; // 특정 사용자 ID (필요시 사용)
+const slackGroupId = process.env.SLACK_USER_GROUP_ID; // 그룹 ID
+
 const web = new WebClient(slackToken);
 
 // DNS 서버 설정
-// DNS를 추가할 때, 해당 DNS가 정상 작동하는지 확인해주세요.
-// 예를 들어, nslookup naver.com 추가할_DNS 를 사용하여 DNS가 정상적으로 응답하는지 테스트합니다.
 const dnsServers = {
-  KT: ['168.126.63.1', '168.126.63.2'],
-  LGUplus: ['164.124.101.2', '203.248.252.2'],
-  SKT: ['210.220.163.82', '219.250.36.130'],
+  KT: ["168.126.63.1", "168.126.63.2"],
+  LGUplus: ["164.124.101.2", "203.248.252.2"],
+  SKT: ["210.220.163.82", "219.250.36.130"],
 };
 
-const domains = process.env.CHECK_DOMAINS.split(',');
-
-async function sendSlackMessage(message) {
+async function sendSlackMessage(channel, message) {
   try {
     await web.chat.postMessage({
-      channel: slackChannel,
+      channel: channel,
       text: `<@${slackUserId}>`,
       blocks: message,
     });
   } catch (error) {
-    console.error('Error sending message to Slack:', error);
+    console.error("Error sending message to Slack:", error);
   }
 }
 
@@ -67,35 +67,38 @@ async function checkDNS() {
   }
 
   const blocks = [];
+  const mentionTag = slackGroupId
+    ? `<!subteam^${slackGroupId}>`
+    : `<@${slackUserId}>`;
 
-  if (allSuccessful) {
+  if (!allSuccessful) {
     blocks.push({
-      type: 'section',
+      type: "section",
       text: {
-        type: 'mrkdwn',
-        text: ':white_check_mark: All DNS lookups succeeded without any issues.',
+        type: "mrkdwn",
+        text: ":white_check_mark: All DNS lookups succeeded without any issues.",
       },
     });
+    await sendSlackMessage(slackChannelSuccess, blocks);
   } else {
     blocks.push({
-      type: 'section',
+      type: "section",
       text: {
-        type: 'mrkdwn',
-        text: `:warning: *DNS Lookup Failures Detected!* :warning:\n<@${slackUserId}> Some DNS lookups failed. See the details below:`,
+        type: "mrkdwn",
+        text: `:warning: *DNS Lookup Failures Detected!* :warning:\n${mentionTag} Some DNS lookups failed. See the details below:`,
       },
     });
-    errorMessages.forEach(message => {
+    errorMessages.forEach((errorMessage) => {
       blocks.push({
-        type: 'section',
+        type: "section",
         text: {
-          type: 'mrkdwn',
-          text: message,
+          type: "mrkdwn",
+          text: errorMessage,
         },
       });
     });
+    await sendSlackMessage(slackChannelFailure, blocks);
   }
-
-  await sendSlackMessage(blocks);
 }
 
 checkDNS();

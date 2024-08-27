@@ -15,7 +15,7 @@ Vercel DNS ISP Block Watch Dog는 KT, SKT, LGU+ DNS 서버를 통해 Vercel로 �
 
 - 조회 결과를 Slack으로 알림
 
-- 정기적인 스케줄링 (15분마다)
+- 정기적인 스케줄링 (15분 ~ 1시간)
 
   
 
@@ -53,8 +53,10 @@ npm  install
 프로젝트 루트에 .env.local 파일을 생성하고 다음 환경 변수를 설정합니다.
 ```sh
 SLACK_BOT_TOKEN=your-slack-bot-token
-SLACK_CHANNEL_ID=your-slack-channel-id
+SLACK_CHANNEL_ID_SUCCESS=your-slack-channel-id
+SLACK_CHANNEL_ID_FAILURE=your-slack-channel-id
 SLACK_USER_ID=your-slack-user-id
+SLACK_USER_GROUP_ID=your-slack-user-group-id
 CHECK_DOMAINS=사용하시는_도메인_주소.com,사용하시는_도메인_주소_두번째.com,사용하시는_도메인_주소_세번째.com
 ```
 **Github Action** 으로 실행하시는 경우
@@ -65,7 +67,7 @@ GitHub Secrets 에서 env를 설정해주세요 .
 
 ### 1.  실행
 
-**로컬환경에서** 실행하시는 경우
+**로컬환경에서** 실행하시는 경우 (node v20 부터가능, 그 외 버전은 dotenv를 사용해주세요.)
 ```sh
 node --env-file=.env watch_dog.js
 ```
@@ -75,4 +77,4 @@ node --env-file=.env watch_dog.js
 1. GitHub 리포지토리의 “Actions” 탭으로 이동합니다.
 2. 실행하려는 워크플로우를 선택합니다.
 3. 오른쪽 상단의 “Run workflow” 버튼을 클릭하여 수동으로 실행합니다.
-4. 이후 15분 마다 자동으로 실행됩니다. 
+4. 이후 15분 ~ 1시간 마다 자동으로 실행됩니다. 
